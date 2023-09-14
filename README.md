@@ -1,2 +1,2 @@
-# me-gorge.org
-Site de peintures de Marie-Elisabeth Gorge
+# Bertrand d'Arrentières
+Site de peintures de Bertrand d'Arrentières
