@@ -1,11 +1,7 @@
 <?php
+include_once('config/config.php');
 
-if ($_SERVER['SERVER_ADDR'] == '127.0.0.1' ||
-	$_SERVER['SERVER_ADDR'] == 'localhost' || 
-	$_SERVER['SERVER_ADDR'] == '::1')
-	$mysqli = new mysqli('localhost', 'root', '', 'peintures_me');
-else
-	$mysqli = new mysqli('localhost', 'gorge', 'roger', 'peintures_me');
+$mysqli = new mysqli($GLOBALS['config']['dbserver'], $GLOBALS['config']['dbuser'], $GLOBALS['config']['dbspass'], $GLOBALS['config']['dbname']);
 
 if ($mysqli->connect_errno)
 {
@@ -19,19 +15,23 @@ $SecondaryText = "";
 
 if (!empty($_GET['years']))
 {
-	switch ($_GET['years'])
+	$years = explode('_', $_GET['years']);
+
+	$from = $years[0];
+
+	if ($years[1] == 'now')
 	{
-		case '1950_1975':
-			$where = " AND painting_date BETWEEN '1950-01-01' AND '1976-01-01'";
-			$SecondaryText = "Peintures des années 1950 à 1975";
-			break;
-		case '1976_1995': $where = " AND painting_date BETWEEN '1976-01-01' AND '1996-01-01'";
-			$SecondaryText = "Peintures des années 1976 à 1995";
-			break;
-		case '1996_now': $where = " AND painting_date >= '1996-01-01'";
-			$SecondaryText = "Peintures des années 1995 à nos jours";
-			break;
+		$to_text = "nos jours";
+		$to = date('y') + 1;
 	}
+	else
+	{
+		$to_text = $years[1];
+		$to = ($years[1] + 1) . '-01-01';
+	}
+	
+	$where = " AND painting_date BETWEEN '$from-01-01' AND '$to'";
+	$SecondaryText = "Peintures des années $from à $to_text";
 }
 
 if (!empty($_GET['year']))
@@ -94,7 +94,7 @@ if ($numRows == 0)
             <!--Page heading-->
             <div class="row wow fadeIn" data-wow-delay="0.2s">
                 <div class="col-md-12">
-                    <h1 class="h1-responsive">Peintures de Marie-Elisabeth Gorge
+                    <h1 class="h1-responsive"><?php echo $GLOBALS['config']['Site title']; ?>
                         <small class="text-muted">Aucune peinture trouvée</small>
                     </h1>
                 </div>
@@ -128,9 +128,9 @@ else if ($numRows == 1)
 
 		<?php 
 
-			$encodedURL = urlencode('http://me-gorge.org/'.$GLOBALS['indexpage'].'?peinture='.$aPainting['number']);
+			$encodedURL = urlencode($GLOBALS['config']['Site URL'].$GLOBALS['indexpage'].'?peinture='.$aPainting['number']);
 			$encodedName = urlencode($aPainting['title']);
-			$encodedMedia = urlencode('http://me-gorge.org/peintures/'.$aPainting['filename']);
+			$encodedMedia = urlencode($GLOBALS['config']['Site URL'] . 'peintures/'.$aPainting['filename']);
 
 echo <<<social
 <p style="text-align:right">
@@ -138,7 +138,6 @@ echo <<<social
 	    <a target="_blank" href="https://twitter.com/home?status=$encodedName - $encodedURL" class="Share-icon"><img src="img/twitter.png" /></a>
 	    <a target="_blank" href="https://pinterest.com/pin/create/button/?url=$encodedURL&amp;media=$encodedMedia&amp;description=$encodedName" class="Share-icon"><img src="img/pinterest.png" /></a>
 	    <a target="_blank" href="https://plus.google.com/share?url=$encodedURL" class="Share-icon"><img src="img/googleplus.png" /></a>
-
 </p>
 social;
 		?>
@@ -169,7 +168,7 @@ else
             <!--Page heading-->
             <div class="row wow fadeIn" data-wow-delay="0.2s">
                 <div class="col-md-12">
-                    <h1 class="h1-responsive">Peintures de Marie-Elisabeth Gorge
+                    <h1 class="h1-responsive"><?php echo $GLOBALS['config']['Site title']; ?>
                         <small class="text-muted"><?php echo $SecondaryText; ?></small>
                     </h1>
                 </div>
@@ -205,9 +204,9 @@ else
 
 			echo '		</p>';
 
-			$encodedURL = urlencode('http://me-gorge.org/'.$GLOBALS['indexpage'].'?peinture='.$aPainting['number']);
+			$encodedURL = urlencode($GLOBALS['config']['Site URL'].$GLOBALS['indexpage'].'?peinture='.$aPainting['number']);
 			$encodedName = urlencode($aPainting['title']);
-			$encodedMedia = urlencode('http://me-gorge.org/peintures/'.$aPainting['filename']);
+			$encodedMedia = urlencode($GLOBALS['config']['Site URL'] . '/peintures/'.$aPainting['filename']);
 
 echo <<<social
 <p>
@@ -215,7 +214,6 @@ echo <<<social
 	    <a target="_blank" href="https://twitter.com/home?status=$encodedName - $encodedURL" class="Share-icon"><img src="img/twitter.png" /></a>
 	    <a target="_blank" href="https://pinterest.com/pin/create/button/?url=$encodedURL&amp;media=$encodedMedia&amp;description=$encodedName" class="Share-icon"><img src="img/pinterest.png" /></a>
 	    <a target="_blank" href="https://plus.google.com/share?url=$encodedURL" class="Share-icon"><img src="img/googleplus.png" /></a>
-
 </p>
 social;
 
@@ -240,7 +238,10 @@ function echoTags($aPainting)
 		$tags[] = array('q' => 'q=Phares', 'caption' => 'Phare');
 
 	if (!empty($aPainting['keyword']))
-		$tags[] = array('q' => 'q=' . htmlspecialchars($aPainting['keyword']), 'caption' => $aPainting['keyword']);
+	{
+		foreach (explode(',', $aPainting['keyword']) as $k)
+			$tags[] = array('q' => 'q=' . htmlspecialchars($k), 'caption' => $k);
+	}
 
 	if (!empty($aPainting['location_fr']))
 		$tags[] = array('q' => 'q=' . htmlspecialchars($aPainting['location_fr']), 'caption' => $aPainting['location_fr']);

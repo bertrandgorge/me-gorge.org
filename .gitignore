@@ -1,0 +1,5 @@
+peintures/*.jpg
+peintures/*.jpeg
+config/config.php
+config/config bertrand.php
+config/config me.php

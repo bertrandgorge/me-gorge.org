@@ -1,46 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-
+include_once(__dir__ . '/config/config.php');
 $GLOBALS['indexpage'] = basename(__FILE__);
-
-// Identify on which section we are currently:
-$section = 'home';
-if (!empty($_GET['q']))
-{
-	$q = trim(strtolower($_GET['q']));
-
-	if (strpos($q, 'phare') !== false  || strpos($q, 'lighthouse') !== false)
-	{
-		$section = 'lighthouses';
-	}
-
-	if (strpos($q, 'fleurs') !== false  || strpos($q, 'fleur') !== false)
-	{
-		$section = 'Fleurs';
-	}
-
-	if (strpos($q, 'djibouti') !== false)
-	{
-		$section = 'Djibouti';
-	}
-}
-
-if (!empty($_GET['bio']))
-{
-	$section = 'bio';
-}
-
-
 ?>
-
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-
-    <title>Peintures de Marie-Elisabeth Gorge</title>
+    <title><?php echo $GLOBALS['config']['Site title']; ?></title>
 <?php
 include('opengraph.php');
 
@@ -127,13 +95,7 @@ include('opengraph.php');
     </style>
 
 <script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-ga('create', 'UA-51359952-1', 'me-gorge.org');
-ga('require', 'displayfeatures');
-ga('send', 'pageview');
+<?php echo $GLOBALS['config']['AdditionalJS']; ?>
 </script>
 
 </head>
@@ -142,78 +104,18 @@ ga('send', 'pageview');
     <header>
         <!--Navbar-->
        <nav class="navbar navbar-expand-lg navbar-dark navbar-dark">
-            <a class="navbar-brand" href="#">Peintures de Marie-Elisabeth Gorge</a>
+            <a class="navbar-brand" href="#"><?php echo $GLOBALS['config']['Site title']; ?></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item <?php if ($section=='home') echo 'active'; ?>">
+                    <li class="nav-item">
                         <a class="nav-link" href="?">Accueil</a>
                     </li>
-                    <li class="nav-item <?php if ($section=='Terre') echo 'active'; ?>">
-                        <a class="nav-link" href="?q=Terre">Djibouti</a>
-                    </li>
-                    <li class="nav-item <?php if ($section=='Mer') echo 'active'; ?>">
-                        <a class="nav-link" href="?q=Mer">Phares</a>
-                    </li>
-                    <li class="nav-item <?php if ($section=='Ciel') echo 'active'; ?>">
-                        <a class="nav-link" href="?q=Ciel">Fleurs</a>
-                    </li>
 
-                    <li class="nav-item btn-group">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Saisons</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="?q=Automne">Automne</a>
-                            <a class="dropdown-item" href="?q=Hiver">Hiver</a>
-                            <a class="dropdown-item" href="?q=Printemps">Printemps</a>
-                            <a class="dropdown-item" href="?q=Été">Été</a>
+                    <?php echoMenus(); ?>
 
-                        </div>
-                    </li>
-
-                   <li class="nav-item btn-group">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Provence</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="?q=Cap d'Antibes">Cap d'Antibes</a>
-                            <a class="dropdown-item" href="?q=Caussol">Caussol</a>
-                            <a class="dropdown-item" href="?q=Châteauneuf de Grasse">Châteauneuf de Grasse</a>
-                            <a class="dropdown-item" href="?q=Grasse">Grasse</a>
-                            <a class="dropdown-item" href="?q=Iles de Lerins">Iles de Lerins</a>
-                            <a class="dropdown-item" href="?q=Plan de Grasse">Plan de Grasse</a>
-                            <a class="dropdown-item" href="?q=Plascassier">Plascassier</a>
-                            <a class="dropdown-item" href="?q=Roquefort les Pins">Roquefort les Pins</a>
-                            <a class="dropdown-item" href="?q=Saint Laurent du Var">Saint Laurent du Var</a>
-                        </div>
-                    </li>
-
-                   <li class="nav-item btn-group">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Provence</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="?q=Cap d'Antibes">Cap d'Antibes</a>
-                            <a class="dropdown-item" href="?q=Caussol">Caussol</a>
-                            <a class="dropdown-item" href="?q=Châteauneuf de Grasse">Châteauneuf de Grasse</a>
-                            <a class="dropdown-item" href="?q=Grasse">Grasse</a>
-                            <a class="dropdown-item" href="?q=Iles de Lerins">Iles de Lerins</a>
-                            <a class="dropdown-item" href="?q=Plan de Grasse">Plan de Grasse</a>
-                            <a class="dropdown-item" href="?q=Plascassier">Plascassier</a>
-                            <a class="dropdown-item" href="?q=Roquefort les Pins">Roquefort les Pins</a>
-                            <a class="dropdown-item" href="?q=Saint Laurent du Var">Saint Laurent du Var</a>
-                        </div>
-                    </li>
-
-                    <li class="nav-item btn-group">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Bretagne</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="?q=Trégastel">Trégastel</a>
-                            <a class="dropdown-item" href="?q=Belle Ile en Mer">Belle Ile en Mer</a>
-                            <a class="dropdown-item" href="?q=Golfe du Morbihan">Golfe du Morbihan</a>
-                        </div>
-                    </li>
-
-                    <li class="nav-item <?php if ($section=='bio') echo 'active'; ?>">
-                        <a class="nav-link" href="?bio=Bertrand d'Arrentières">Biographie</a>
-                    </li>
                 </ul>
                 <form class="form-inline" method="GET">
                     <input name="q" class="form-control mr-sm-2" type="text" placeholder="Rechercher" aria-label="Search" value="<?php if (isset($_GET['q'])) echo htmlspecialchars($_GET['q']);?>">
@@ -228,25 +130,21 @@ ga('send', 'pageview');
         <!--Main layout-->
         <div class="container">
 
-
-
-
 <?php
 
 if (!empty($_GET['bio']))
 {
 ?>
-<!--Page heading-->
 <div class="row wow fadeIn" data-wow-delay="0.2s">
 <div class="col-md-12">
-    <h1 class="h1-responsive">Bertrand d'Arrentières
+    <h1 class="h1-responsive"><?php echo $GLOBALS['config']['Nom']; ?>
 	<small class="text-muted">Biographie</small>
     </h1>
 </div>
 </div>
-<!--/.Page heading-->
 <hr>
 
+	<?php echo $GLOBALS['config']['bio'] ?>
 
 
 <?php
@@ -257,15 +155,7 @@ else
 ?>
 
 
-
-
-            <!--repeat-->
-
-
-
-
         </div>
-        <!--/.Main layout-->
     </main>
 
 
@@ -276,33 +166,13 @@ else
             <div class="row">
                 <!--First column-->
                 <div class="col-lg-5 col-md-6 ml-auto">
-                    <h5 class="title mb-3"><strong>Bertrand d'Arrentières</strong></h5>
-                    <p><img src="peintures/me_footer.jpg" style="float: left; margin: 0 5px 10px 0">Peintures de Provence et d'ailleurs</p>
-                    <p><a href="?bio=biography">En savoir plus...</a></p>
+                    <h5 class="title mb-3"><strong><?php echo $GLOBALS['config']['Nom']; ?></strong></h5>
+                    <p><img src="<?php echo $GLOBALS['config']['Photo']; ?>" style="float: left; margin: 0 5px 10px 0"><?php $GLOBALS['config']['Bio courte']; ?></p>
+                    <p><a href="?bio=<?php echo htmlspecialchars($GLOBALS['config']['Nom']) ?>">En savoir plus...</a></p>
                 </div>
                 <!--/.First column-->
-                <hr class="w-100 clearfix d-sm-none">
-                <!--Second column-->
-                <div class="col-lg-2 col-md-6 ml-auto">
-                    <h5 class="title mb-3"><strong>Saisons</strong></h5>
-                    <ul>
-                        <li><a href="?q=Automne">Automne</a></li>
-                        <li><a href="?q=Hiver">Hiver</a></li>
-                        <li><a href="?q=Printemps">Printemps</a></li>
-                        <li><a href="?q=Été">Été</a></li>
-                    </ul>
-                </div>
-
-                <hr class="w-100 clearfix d-sm-none">
-                <!--Second column-->
-                <div class="col-lg-2 col-md-6 ml-auto">
-                    <h5 class="title mb-3"><strong>&nbsp;</strong></h5>
-                    <ul>
-                        <li><a href="?q=Terre">Terre</a></li>
-                        <li><a href="?q=Mer">Mer</a></li>
-                        <li><a href="?q=Ciel">Ciel</a></li>
-                    </ul>
-                </div>
+                
+              	<?php echoFooterMenus(); ?>
 
             </div>
         </div>
@@ -341,3 +211,57 @@ else
 </body>
 
 </html>
+<?php
+
+function echoMenus()
+{
+    foreach ($GLOBALS['config']['menus'] as $menuName => $v)
+    {
+        if (is_array($v))
+        {
+            // drop down menu
+
+            echo '<li class="nav-item btn-group">' . "\n";
+            echo '<a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.htmlentities($menuName).'</a>' . "\n";
+            echo '<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">' . "\n";
+            foreach ($v as $subMenuName => $subMenuQuery)
+            echo '    <a class="dropdown-item" href="?'.$subMenuQuery.'">'.htmlentities($subMenuName).'</a>' . "\n";
+            echo '</div>' . "\n";
+            echo '</li>' . "\n";
+
+        }
+        else 
+        {
+            // Regular menu
+            $classes = '';
+            if (strtolower($_GET['q']) == strtolower($v)) 
+                $classes .= ' active';
+
+            echo "<li class=\"nav-item $classes \"><a class=\"nav-link\" href=\"?".$v."\">".htmlentities($menuName)."</a></li>";
+        }
+    }
+
+    if (!empty($GLOBALS['config']['Bio courte']))
+    {
+        $classes = '';
+        if (strtolower($_GET['q']) == 'bio') 
+            $classes .= ' active';
+
+        echo '    <li class="nav-item '.$classes.'"><a class="nav-link" href="?bio=' . htmlspecialchars($GLOBALS['config']['Nom']) . '">Biographie</a></li>';
+    }
+}
+
+function echoFooterMenus()
+{
+    foreach ($GLOBALS['config']['footer_menus'] as $menuName => $subMenus)
+    {
+        echo '<hr class="w-100 clearfix d-sm-none">';
+        echo '<div class="col-lg-2 col-md-6 ml-auto">';
+        echo '  <h5 class="title mb-3"><strong>'.$menuName.'</strong></h5>';
+        echo '<ul>';
+
+        foreach ($subMenus as $menuName => $query)
+            echo '<li><a href="?' . $query. '">'.htmlentities($menuName).'</a></li>';
+        echo '</ul></div>';
+    }
+}
